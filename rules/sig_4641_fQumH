@@ -1,0 +1,32 @@
+rule sig_4641_fQumH {
+	meta:
+		description = "4641 - file fQumH.exe"
+		author = "The DFIR Report"
+		reference = "https://thedfirreport.com"
+		date = "2021-08-02"
+		hash1 = "3420a0f6f0f0cc06b537dc1395638be0bffa89d55d47ef716408309e65027f31"
+	strings:
+		$s1 = "Usage: .system COMMAND" fullword ascii
+		$s2 = "Usage: .log FILENAME" fullword ascii
+		$s3 = "* If FILE begins with \"|\" then it is a command that generates the" fullword ascii
+		$s4 = "AppPolicyGetProcessTerminationMethod" fullword ascii
+		$s5 = "Usage %s sub-command ?switches...?" fullword ascii
+		$s6 = "attach debugger to process %d and press any key to continue." fullword ascii
+		$s7 = "%s:%d: expected %d columns but found %d - extras ignored" fullword ascii
+		$s8 = "%s:%d: expected %d columns but found %d - filling the rest with NULL" fullword ascii
+		$s9 = "Unknown option \"%s\" on \".dump\"" fullword ascii
+		$s10 = "REPLACE INTO temp.sqlite_parameters(key,value)VALUES(%Q,%s);" fullword ascii
+		$s11 = "error in %s %s%s%s: %s" fullword ascii
+		$s12 = "UPDATE temp.sqlite_master SET sql = sqlite_rename_column(sql, type, name, %Q, %Q, %d, %Q, %d, 1) WHERE type IN ('trigger', 'view" ascii
+		$s13 = "BBBBBBBBBBBBBBBBBBBB" wide /* reversed goodware string 'BBBBBBBBBBBBBBBBBBBB' */
+		$s14 = "UPDATE temp.sqlite_master SET sql = sqlite_rename_column(sql, type, name, %Q, %Q, %d, %Q, %d, 1) WHERE type IN ('trigger', 'view" ascii
+		$s15 = ");CREATE TEMP TABLE [_shell$self](op,cmd,ans);" fullword ascii
+		$s16 = "SqlExec" fullword ascii
+		$s17 = "* If neither --csv or --ascii are used, the input mode is derived" fullword ascii
+		$s18 = "Where sub-commands are:" fullword ascii
+		$s19 = "max rootpage (%d) disagrees with header (%d)" fullword ascii
+		$s20 = "-- Query %d --------------------------------" fullword ascii
+	condition:
+		uint16(0) == 0x5a4d and filesize < 4000KB and
+			( pe.imphash() == "67f1f64a3db0d22bf48121a6cea1da22" or 8 of them )
+}

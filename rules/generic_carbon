@@ -1,0 +1,33 @@
+import "pe"
+import "hash"
+
+rule generic_carbon
+{
+strings:
+$s1 = “ModStart”
+$s2 = “STOP|OK”
+$s3 = “STOP|KILL”
+condition:
+(uint16(0) == 0x5a4d) and all of them
+}
+
+rule carbon_metadata
+{
+condition:
+(pe.version_info[“InternalName”] contains “SERVICE.EXE” or
+pe.version_info[“InternalName”] contains “MSIMGHLP.DLL” or
+pe.version_info[“InternalName”] contains “MSXIML.DLL”)
+and pe.version_info[“CompanyName”] contains “Microsoft Corporation”
+and not (tags contains “signed”)
+}
+
+rule carbon_2016_filenames
+{
+condition:
+file_name contains “wkstrend.xml” or
+file_name contains “cifrado.xml” or
+file_name contains “fsbootfail.dat” or
+file_name contains “encodebase.inf” or
+file_name contains “zcerterror.png” or
+file_name contains “mkfieldsec.dll”
+}

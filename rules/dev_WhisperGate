@@ -1,0 +1,22 @@
+"rule dev_WhisperGate
+{
+ meta:
+  author= ""Silas Cutler (silas@stairwell.com)""
+  description = ""Pre-sample hunting rules for DoS:Win32/WhisperGate""
+  version = ""0.1""
+  reference = ""https://www.microsoft.com/security/blog/2022/01/15/destructive-malware-targeting-ukrainian-organizations/""
+ strings:
+  $_ransom_note01 = ""Your hard drive has been corrupted."" wide ascii nocase
+  $_ransom_note02 = ""In case you want to recover all hard drives"" wide ascii nocase
+  $_ransom_note03 = ""of your organization,"" wide ascii nocase
+  $_ransom_note04 = ""You should pay us $10k via bitcoin wallet"" wide ascii nocase
+  $_ransom_note05 = ""1AVNM68gj6PGPFcJuftKATa4WLnzg8fpfv and send message via"" wide ascii nocase
+  $_ransom_note06 = ""tox ID 8BEDC411012A33BA34F49130D0F186993C6A32DAD8976F6A5D82C1ED23054C057ECED5496F65"" wide ascii nocase
+  $_ransom_note07 = ""with your organization name."" wide ascii nocase
+  $_ransom_note08 = ""We will contact you to give further instructions."" wide ascii nocase
+
+        $bit_address = ""1AVNM68gj6PGPFcJuftKATa4WLnzg8fpfv"" wide ascii nocase
+        $tox_address = ""8BEDC411012A33BA34F49130D0F186993C6A32DAD8976F6A5D82C1ED23054C057ECED5496F65"" wide ascii nocase
+ condition:
+  2 of ($_ransom_note0*) or $bit_address or $tox_address
+}"

@@ -1,0 +1,13 @@
+rule FirstPayload_upnphost_APT28XAGENTJuly2018 {
+	meta:
+		description = "Yara Rule for APT28 XAGENT July2018 First Payload"
+		author = "CSE CybSec Enterprise - Z-Lab"
+		last_updated = "2018-07-13"
+		tlp = "white"
+		category = "informational"
+	strings:
+		$a = {56 AB 37 92 E8}
+		$b = {41 75 74 6F 49 74}
+	condition:
+		pe.number_of_resources == 26 and pe.resources[19].type == pe.RESOURCE_TYPE_RCDATA and pe.version_info["FileDescription"] contains "Compatibility" and all of them
+}

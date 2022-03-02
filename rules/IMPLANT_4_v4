@@ -1,0 +1,11 @@
+Rule IMPLANT_4_v4
+{
+strings:
+$DK_format1 = "/c format %c: /Y /Q" ascii
+$DK_format2 = "/c format %c: /Y /X /FS:NTFS" ascii
+$DK_physicaldrive = "PhysicalDrive%d" wide
+$DK_shutdown = "shutdown /r /t %d"
+$MZ = {4d 5a}
+condition:
+$MZ at 0 and all of ($DK*)
+}

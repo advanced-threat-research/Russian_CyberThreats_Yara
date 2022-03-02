@@ -1,0 +1,32 @@
+rule sig_4641_tdrE934 {
+	meta:
+		description = "4641 - file tdrE934.exe"
+		author = "The DFIR Report"
+		reference = "https://thedfirreport.com"
+		date = "2021-08-02"
+		hash1 = "48f2e2a428ec58147a4ad7cc0f06b3cf7d2587ccd47bad2ea1382a8b9c20731c"
+	strings:
+		$s1 = "AppPolicyGetProcessTerminationMethod" fullword ascii
+		$s2 = "D:\\1W7w3cZ63gF\\wFIFSV\\YFU1GTi1\\i5G3cr\\Wb2f\\Cvezk3Oz\\2Zi9ir\\S76RW\\RE5kLijcf.pdb" fullword ascii
+		$s3 = "https://sectigo.com/CPS0" fullword ascii
+		$s4 = "2http://crl.comodoca.com/AAACertificateServices.crl04" fullword ascii
+		$s5 = "?http://crl.usertrust.com/USERTrustRSACertificationAuthority.crl0v" fullword ascii
+		$s6 = "3http://crt.usertrust.com/USERTrustRSAAddTrustCA.crt0%" fullword ascii
+		$s7 = "ntdll.dlH" fullword ascii
+		$s8 = "http://ocsp.sectigo.com0" fullword ascii
+		$s9 = "2http://crl.sectigo.com/SectigoRSACodeSigningCA.crl0s" fullword ascii
+		$s10 = "2http://crt.sectigo.com/SectigoRSACodeSigningCA.crt0#" fullword ascii
+		$s11 = "tmnEt6XElyFyz2dg5EP4TMpAvGdGtork5EZcpw3eBwJQFABWlUZa5slcF6hqfGb2HgPed49gr2baBCLwRel8zM5cbMfsrOdS1yd6bMpepebebyT4NIN6zOvk" fullword ascii
+		$s12 = "ealagi@aol.com0" fullword ascii
+		$s13 = "operator co_await" fullword ascii
+		$s14 = "ZGetModuleHandle" fullword ascii
+		$s15 = "api-ms-win-appmodel-runtime-l1-1-2" fullword wide
+		$s16 = "RtlExitUserThrea`NtFlushInstruct" fullword ascii
+		$s17 = "UAWAVAUATVWSH" fullword ascii
+		$s18 = "AWAVAUATVWUSH" fullword ascii
+		$s19 = "AWAVVWSH" fullword ascii
+		$s20 = "UAWAVATVWSH" fullword ascii
+	condition:
+		uint16(0) == 0x5a4d and filesize < 2000KB and
+			( pe.imphash() == "4f1ec786c25f2d49502ba19119ebfef6" or 8 of them )
+}

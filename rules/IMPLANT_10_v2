@@ -1,0 +1,9 @@
+Rule IMPLANT_10_v2
+{
+strings:
+$MZ = "MZ"
+$xor = { 34 ?? 66 33 C1 48 FF C1 }
+$nop = { 66 66 66 66 66 66 0f 1f 84 00 00 00 00 00}
+condition:
+$MZ at 0 and $xor and $nop
+}

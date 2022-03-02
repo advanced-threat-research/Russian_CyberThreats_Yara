@@ -1,0 +1,8 @@
+Rule IMPLANT_5_v3
+{
+strings:
+$BYTES1 = { 0F AF C0 6? C0 07 00 00 00 2D 01 00 00 00 0F AF ?? 39 ?8 }
+$BYTES2 = { 0F AF C0 6? C0 07 48 0F AF ?? 39 ?8 }
+condition:
+any of them
+}

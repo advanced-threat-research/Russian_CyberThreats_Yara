@@ -1,0 +1,9 @@
+Rule IMPLANT_10_v1
+{
+strings:
+$MZ = "MZ"
+$STR1 = {33 ?? 83 F2 ?? 81 e2 ff 00 00 00}
+$STR2 = {0f be 14 01 33 d0 ?? f2 [1-4] 81 e2 ff 00 00 00 66 89 [6] 40 83 f8 ?? 72}
+condition:
+$MZ at 0 and ($STR1 or $STR2)
+}

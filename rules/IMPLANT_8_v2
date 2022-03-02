@@ -1,0 +1,8 @@
+Rule IMPLANT_8_v2
+{
+strings:
+$DOTNET= "mscorlib" ascii
+$XOR = {61 20 AA 00 00 00 61}
+condition:
+(uint16(0) == 0x5A4D) and all of them
+}

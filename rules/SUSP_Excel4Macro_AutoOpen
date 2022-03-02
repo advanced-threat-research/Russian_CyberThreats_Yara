@@ -1,0 +1,42 @@
+rule SUSP_Excel4Macro_AutoOpen
+{
+    meta:
+        description = "Detects Excel4 macro use with auto open / close"
+        author = "John Lambert @JohnLaTwC"
+        date = "2020-03-26"
+        score = 50
+        hash="2fb198f6ad33d0f26fb94a1aa159fef7296e0421da68887b8f2548bbd227e58f"
+    strings:
+        $header_docf = { D0 CF 11 E0 }
+        $s1 = "Excel" fullword
+
+        // 2fb198f6ad33d0f26fb94a1aa159fef7296e0421da68887b8f2548bbd227e58f
+        // ' 0018     23 LABEL : Cell Value, String Constant - build-in-name 1 Auto_Open
+        // 00002d80:
+        // 20 00 00 01 07 00 00 00 00 00 00 00 00 00 00 01 3a 01 00 16 00 07 00
+
+        // f4c01e26eb88b72d38be3d6331fafe03b1ae53fdbff57d610173ed797fa26e73
+        // 00003460: 00 00 18 00 17 00 20 00 00 01 07 00 00 00 00 00  ...... .........
+        // 00003470: 00 00 00 00 00 01 3a 00 00 3f 02 8d 00 c1 01 08  ......:..?......
+
+        // ccef64586d25ffcb2b28affc1f64319b936175c4911e7841a0e28ee6d6d4a02d
+        // ' 0018     23 LABEL : Cell Value, String Constant - build-in-name 1 Auto_Open
+        // 00003560: 00 00 00 00 00 18 00 17 00 aa 03 00 01 07 00 00  ................
+        // 00003570: 00 00 00 00 00 00 00 00 01 3a 00 00 04 00 65 00  .........:....e.
+
+        $Auto_Open  = {18 00 17 00 20 00 00 01 07 00 00 00 00 00 00 00 00 00 00 01 3a }
+        $Auto_Close = {18 00 17 00 20 00 00 01 07 00 00 00 00 00 00 00 00 00 00 02 3a }
+        $Auto_Open1 = {18 00 17 00 aa 03 00 01 07 00 00 00 00 00 00 00 00 00 00 01 3a }
+        $Auto_Close1= {18 00 17 00 aa 03 00 01 07 00 00 00 00 00 00 00 00 00 00 02 3a }
+
+        // some Excel4 files don't have auto_open names e.g.:
+        // b8b80e9458ff0276c9a37f5b46646936a08b83ce050a14efb93350f47aa7d269
+        // 079be05edcd5793e1e3596cdb5f511324d0bcaf50eb47119236d3cb8defdfa4c
+
+
+    condition:
+        filesize < 3000KB
+        and $header_docf at 0
+        and $s1
+        and any of ($Auto_*)
+}

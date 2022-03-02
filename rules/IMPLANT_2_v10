@@ -1,0 +1,8 @@
+Rule IMPLANT_2_v10
+{
+strings:
+$STR1 = { 83 ?? 06 [7-17] fa [0-10] 45 [2-4] 48 [2-4] e8 [2] FF FF [6-8] 48 8d [3] 48 89 [3] 45 [2]
+4? [1-2] 01}
+condition:
+(uint16(0) == 0x5A4D) and all of them
+}

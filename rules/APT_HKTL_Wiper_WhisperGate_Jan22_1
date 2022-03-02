@@ -1,0 +1,21 @@
+rule APT_HKTL_Wiper_WhisperGate_Jan22_1 {
+   meta:
+      description = "Detects unknown wiper malware"
+      author = "Florian Roth"
+      reference = "https://www.microsoft.com/security/blog/2022/01/15/destructive-malware-targeting-ukrainian-organizations/"
+      date = "2022-01-16"
+      score = 85
+      hash1 = "a196c6b8ffcb97ffb276d04f354696e2391311db3841ae16c8c9f56f36a38e92"
+   strings:
+      /* AAAAA\x00Your hard drive has been corrupted. */
+      $xc1 = { 41 41 41 41 41 00 59 6F 75 72 20 68 61 72 64 20
+               64 72 69 76 65 20 68 61 73 20 62 65 65 6E 20 63
+               6F 72 72 75 70 74 65 64 }
+      
+      $op1 = { 89 34 24 e8 3f ff ff ff 50 8d 65 f4 31 c0 59 5e 5f }
+      $op2 = { 8d bd e8 df ff ff e8 04 de ff ff b9 00 08 00 00 f3 a5 c7 44 24 18 00 00 00 00 c7 44 24 14 00 00 00 00 c7 44 24 10 03 00 00 00 c7 44 24 0c 00 00 00 00 }
+      $op3 = { c7 44 24 0c 00 00 00 00 c7 44 24 08 00 02 00 00 89 44 24 04 e8 aa fe ff ff 83 ec 14 89 34 24 e8 3f ff ff ff 50 }
+   condition:
+      uint16(0) == 0x5a4d and
+      filesize < 100KB and ( 1 of ($x*) or 2 of them ) or all of them
+}

@@ -1,0 +1,8 @@
+rule carbon_metadata
+{
+condition:
+(pe.version_info[“InternalName”] contains “SERVICE.EXE” or
+pe.version_info[“InternalName”] contains “MSIMGHLP.DLL” or
+pe.version_info[“InternalName”] contains “MSXIML.DLL”)
+and pe.version_info[“CompanyName”] contains “Microsoft Corporation”
+}

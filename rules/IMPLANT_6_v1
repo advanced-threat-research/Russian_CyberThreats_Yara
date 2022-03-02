@@ -1,0 +1,9 @@
+Rule IMPLANT_6_v1
+{
+strings:
+$STR1 = "dll.dll" wide ascii
+$STR2 = "Init1" wide ascii
+$STR3 = "netui.dll" wide ascii
+condition:
+(uint16(0) == 0x5A4D or uint16(0) == 0xCFD0 or uint16(0) == 0xC3D4 or uint32(0) ==
+0x46445025 or uint32(1) == 0x6674725C) and all of them }

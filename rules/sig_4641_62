@@ -1,0 +1,32 @@
+rule sig_4641_62 {
+	meta:
+		description = "4641 - file 62.dll"
+		author = "The DFIR Report"
+		reference = "https://thedfirreport.com"
+		date = "2021-08-02"
+		hash1 = "8b9d605b826258e07e63687d1cefb078008e1a9c48c34bc131d7781b142c84ab"
+	strings:
+		$s1 = "Common causes completion include incomplete download and damaged media" fullword ascii
+		$s2 = "An error occurred writing to the file" fullword ascii
+		$s3 = "asks should be performed?" fullword ascii
+		$s4 = "The waiting time for the end of the launch was exceeded for an unknown reason" fullword ascii
+		$s5 = "Select the Start Menu folder in which you would like Setup to create the programs shortcuts, then click Next. Which additional t" ascii
+		$s6 = "HcA<E3" fullword ascii /* Goodware String - occured 1 times */
+		$s7 = "Select the Start Menu folder in which you would like Setup to create the programs shortcuts, then click Next. Which additional t" ascii
+		$s8 = "D$(9D$@u" fullword ascii /* Goodware String - occured 1 times */
+		$s9 = "Please verify that the correct path and file name are given" fullword ascii
+		$s10 = "Critical error" fullword ascii
+		$s11 = "Please read this information carefully" fullword ascii
+		$s12 = "Unknown error occurred for time: " fullword ascii
+		$s13 = "E 3y4i" fullword ascii
+		$s14 = "D$tOuo2" fullword ascii
+		$s15 = "D$PH9D$8tXH" fullword ascii
+		$s16 = "E$hik7" fullword ascii
+		$s17 = "D$p]mjk" fullword ascii
+		$s18 = "B):0~\"Z" fullword ascii
+		$s19 = "Richo/" fullword ascii
+		$s20 = "D$xJij" fullword ascii
+	condition:
+		uint16(0) == 0x5a4d and filesize < 70KB and
+			( pe.imphash() == "42205b145650671fa4469a6321ccf8bf" and pe.exports("StartW") or 8 of them )
+}

@@ -1,0 +1,13 @@
+rule SecondPayload_sdbn_APT28XAGENTJuly2018 {
+	meta:
+		description = "Yara Rule for APT28 XAGENT July2018 Second Payload sdbn.dll"
+		author = "CSE CybSec Enterprise - Z-Lab"
+		last_updated = "2018-07-13"
+		tlp = "white"
+		category = "informational"
+	strings:
+		$a = {0F BE C9 66 89}
+		$b = {8B EC 83 EC 10}
+	condition:
+	pe.number_of_sections == 6 and pe.number_of_resources == 1 and pe.resources[0].type == pe.RESOURCE_TYPE_VERSION and pe.version_info["ProductName"] contains "Microsoft" and all of them
+}

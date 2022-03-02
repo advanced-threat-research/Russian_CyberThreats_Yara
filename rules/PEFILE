@@ -1,0 +1,86 @@
+private rule PEFILE {
+condition:
+	uint16(0) == 0x5a4d and uint32(uint32(0x3c)) == 0x4550
+}
+
+private rule JSFILE {
+  // This is probably the weakest part of the ruleset!
+  strings:
+    $ = /^\s*function / ascii nocase
+    $ = /^\s*try\s*{/ ascii nocase
+  condition:
+    for any of them : ($ at 0)
+}
+
+private rule _dcso_KopiLuwak_JS_core {
+  meta:
+    hash1 = "1c76a66a670a6f69b4fea25ca0ba4885eca9e1b85a2afbab61da3b4a6d52ae19"
+  strings:
+    $path = "\"\\x5cAppData\\x5cRoaming\\x5cMicrosoft\\x5cProtect\\x5cappidpolicyconverter.js\"" ascii nocase
+
+    // mandatory strings
+    $m1 = "WScript.CreateObject(\"WScript.Network\")" ascii nocase
+    $m2 = "ActiveXObject(\"ADODB.STREAM\")" ascii nocase
+    $m3 = ".SaveToFile(" ascii nocase
+    $m4 = ".WriteText(" ascii nocase
+    $m5 = /\+=\s* String\.fromCharCode\(/ ascii nocase
+  condition:
+    $path or
+    all of ($m*)
+}
+
+
+rule dcso_KopiLuwak_MSIL_dropper_js {
+  meta:
+    hash1 = "7481e87023604e7534d02339540ddd9565273dd51c13d7677b9b4c9623f0440b"
+  condition:
+    PEFILE and _dcso_KopiLuwak_JS_core
+}
+
+
+rule dcso_KopiLuwak_MSIL_dropper_pdb {
+  meta:
+    hash1 = "7481e87023604e7534d02339540ddd9565273dd51c13d7677b9b4c9623f0440b"
+  strings:
+    // $ = "c:\\LocalDisc_D\\MyProjects\\Runer\\Runer\\obj\\Release\\Runer.pdb" ascii nocase
+    $ = "\\Runer.pdb" ascii nocase
+  condition:
+    PEFILE and any of them
+}
+
+
+rule dcso_KopiLuwak_related_pdb {
+  strings:
+    // $ = "c:\\LocalDisc_D\\MyProjects\\Runer\\Runer\\obj\\Release\\Runer.pdb" ascii nocase
+    $ = "c:\\LocalDisc_D\\MyProjects\\" ascii nocase
+  condition:
+    PEFILE and
+    not dcso_KopiLuwak_MSIL_dropper_pdb and
+    any of them
+}
+
+
+rule dcso_KopiLuwak_JS_dropper {
+  meta:
+    hash1 = "1c76a66a670a6f69b4fea25ca0ba4885eca9e1b85a2afbab61da3b4a6d52ae19"
+  condition:
+    JSFILE and _dcso_KopiLuwak_JS_core
+}
+
+
+rule dcso_KopiLuwak_JS_decryptor {
+  meta:
+    hash1 = "5698c92fb8fe7ded0ff940c75979f44734650e4f2c852bdb4cbc9d46e7993185"
+  strings:
+    $m1 = "\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\""
+    $m2 = "WScript.Arguments" ascii nocase
+    $m3 = ".charAt("
+    $m4 = /\+=\s*String\.fromCharCode\(/ ascii nocase
+
+    // part of key generation loop
+    $loop = /for \(var i\s*=\s*0;\s*i\s*<\s*256;\s*i\+\+\)/ ascii nocase
+  condition:
+    JSFILE and
+    all of ($m*) and
+    #loop >= 2
+}

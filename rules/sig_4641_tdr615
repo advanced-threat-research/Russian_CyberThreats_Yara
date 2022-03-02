@@ -1,0 +1,32 @@
+rule sig_4641_tdr615 {
+	meta:
+		description = "4641 - file tdr615.exe"
+		author = "The DFIR Report"
+		reference = "https://thedfirreport.com"
+		date = "2021-08-02"
+		hash1 = "12761d7a186ff14dc55dd4f59c4e3582423928f74d8741e7ec9f761f44f369e5"
+	strings:
+		$s1 = "AppPolicyGetProcessTerminationMethod" fullword ascii
+		$s2 = "I:\\RoDcnyLYN\\k1GP\\ap0pivKfOF\\odudwtm30XMz\\UnWdqN\\01\\7aXg1kTkp.pdb" fullword ascii
+		$s3 = "https://sectigo.com/CPS0" fullword ascii
+		$s4 = "2http://crl.comodoca.com/AAACertificateServices.crl04" fullword ascii
+		$s5 = "?http://crl.usertrust.com/USERTrustRSACertificationAuthority.crl0v" fullword ascii
+		$s6 = "3http://crt.usertrust.com/USERTrustRSAAddTrustCA.crt0%" fullword ascii
+		$s7 = "http://ocsp.sectigo.com0" fullword ascii
+		$s8 = "2http://crl.sectigo.com/SectigoRSACodeSigningCA.crl0s" fullword ascii
+		$s9 = "2http://crt.sectigo.com/SectigoRSACodeSigningCA.crt0#" fullword ascii
+		$s10 = "ealagi@aol.com0" fullword ascii
+		$s11 = "operator co_await" fullword ascii
+		$s12 = "GetModuleHandleRNtUnmapViewOfSe" fullword ascii
+		$s13 = "+GetProcAddress" fullword ascii
+		$s14 = "api-ms-win-appmodel-runtime-l1-1-2" fullword wide
+		$s15 = "RtlExitUserThrebNtFlushInstruct" fullword ascii
+		$s16 = "Sectigo Limited1$0\"" fullword ascii
+		$s17 = "b<log10" fullword ascii
+		$s18 = "D*<W -" fullword ascii
+		$s19 = "WINDOWSPROJECT1" fullword wide
+		$s20 = "WindowsProject1" fullword wide
+	condition:
+		uint16(0) == 0x5a4d and filesize < 10000KB and
+			( pe.imphash() == "555560b7871e0ba802f2f6fbf05d9bfa" or 8 of them )
+}

@@ -1,0 +1,32 @@
+rule sig_4641_netscan {
+	meta:
+		description = "4641 - file netscan.exe"
+		author = "The DFIR Report"
+		reference = "https://thedfirreport.com"
+		date = "2021-08-02"
+		hash1 = "bb574434925e26514b0daf56b45163e4c32b5fc52a1484854b315f40fd8ff8d2"
+	strings:
+		$s1 = "netscan.exe" fullword ascii
+		$s2 = "TFMREMOTEPOWERSHELL" fullword wide
+		$s3 = "TFMREMOTEPOWERSHELLEDIT" fullword wide
+		$s4 = "TFMBASEDIALOGREMOTEEDIT" fullword wide
+		$s5 = "*http://crl4.digicert.com/assured-cs-g1.crl0L" fullword ascii
+		$s6 = "*http://crl3.digicert.com/assured-cs-g1.crl00" fullword ascii
+		$s7 = "TFMIGNOREADDRESS" fullword wide
+		$s8 = "TREMOTECOMMONFORM" fullword wide
+		$s9 = "TFMSTOPSCANDIALOG" fullword wide
+		$s10 = "TFMBASEDIALOGSHUTDOWN" fullword wide
+		$s11 = "TFMBASEDIALOG" fullword wide
+		$s12 = "TFMOFFLINEDIALOG" fullword wide
+		$s13 = "TFMLIVEDISPLAYLOG" fullword wide
+		$s14 = "TFMHOSTPROPS" fullword wide
+		$s15 = "GGG`BBB" fullword ascii /* reversed goodware string 'BBB`GGG' */
+		$s16 = "SoftPerfect Network Scanner" fullword wide
+		$s17 = "TUSERPROMPTFORM" fullword wide
+		$s18 = "TFMREMOTESSH" fullword wide
+		$s19 = "TFMREMOTEGROUPSEDIT" fullword wide
+		$s20 = "TFMREMOTEWMI" fullword wide
+	condition:
+		uint16(0) == 0x5a4d and filesize < 6000KB and
+			( pe.imphash() == "573e7039b3baff95751bded76795369e" and ( pe.exports("__dbk_fcall_wrapper") and pe.exports("dbkFCallWrapperAddr") ) or 8 of them )
+}
