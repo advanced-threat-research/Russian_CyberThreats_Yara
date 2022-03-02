@@ -4,4 +4,4 @@ With the rising conflict in the East between Russia and Ukraine, we at Trellix h
 
 In this repository,  we have aggregated many yara rules from various public sources, including our own, and make it available to organizations and individuals alike, to help combat these emerging threats. #ShieldsUp
 
-https://www.trellix.com/en-us/threat-center.html
+For more information on the current threats we are following closely visit us at: https://www.trellix.com/en-us/threat-center.html
